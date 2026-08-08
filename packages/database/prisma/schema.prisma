@@ -1,0 +1,339 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrganisationType {
+  REFERRING_CLINIC
+  RECEIVING_HOSPITAL
+}
+
+enum UserRole {
+  REFERRING_VET
+  RECEIVING_CLINICIAN
+  OWNER
+  ORGANISATION_ADMIN
+}
+
+enum Species {
+  DOG
+  CAT
+}
+
+enum ReferralStatus {
+  DRAFT
+  READY_FOR_REVIEW
+  SUBMITTED
+  MORE_INFORMATION_REQUIRED
+  ACCEPTED
+  APPOINTMENT_BOOKED
+  ADMITTED
+  TREATMENT_IN_PROGRESS
+  DISCHARGED
+  FOLLOW_UP_ACTIVE
+  CLOSED
+  DECLINED
+  CANCELLED
+}
+
+enum DocumentStatus {
+  UPLOADED
+  QUEUED
+  PROCESSING
+  READY_FOR_REVIEW
+  APPROVED
+  FAILED
+}
+
+enum ReviewOutcome {
+  APPROVED
+  CORRECTED
+  REJECTED
+}
+
+enum AlertStatus {
+  REVIEW_REQUIRED
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+model Organisation {
+  id                String                   @id
+  name              String
+  type              OrganisationType
+  memberships       OrganisationMembership[]
+  outgoingReferrals Referral[]               @relation("ReferringOrganisation")
+  incomingReferrals Referral[]               @relation("ReceivingOrganisation")
+  encounters        Encounter[]
+  uploadedDocuments ClinicalDocument[]
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+}
+
+model User {
+  id                String                   @id
+  email             String                   @unique
+  displayName       String
+  memberships       OrganisationMembership[]
+  createdReferrals  Referral[]               @relation("ReferralCreator")
+  statusEvents      ReferralStatusEvent[]
+  uploadedDocuments ClinicalDocument[]
+  reviews           ReviewDecision[]
+  auditEvents       AuditEvent[]
+  createdAt         DateTime                 @default(now())
+}
+
+model OrganisationMembership {
+  id             String       @id
+  organisationId String
+  userId         String
+  role           UserRole
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([organisationId, userId, role])
+}
+
+model Owner {
+  id                String               @id
+  displayName       String
+  email             String               @unique
+  animals           Animal[]
+  consents          Consent[]
+  followUpResponses FollowUpSubmission[]
+  createdAt         DateTime             @default(now())
+}
+
+model Animal {
+  id          String      @id
+  ownerId     String
+  name        String
+  species     Species
+  breed       String
+  sex         String
+  desexed     Boolean
+  dateOfBirth DateTime
+  owner       Owner       @relation(fields: [ownerId], references: [id])
+  encounters  Encounter[]
+  referrals   Referral[]
+  createdAt   DateTime    @default(now())
+}
+
+model Encounter {
+  id                String             @id
+  animalId          String
+  organisationId    String
+  occurredAt        DateTime
+  summary           String
+  animal            Animal             @relation(fields: [animalId], references: [id])
+  organisation      Organisation       @relation(fields: [organisationId], references: [id])
+  documents         ClinicalDocument[]
+  diagnosticResults DiagnosticResult[]
+  medications       MedicationRecord[]
+  dischargePlans    DischargePlan[]
+}
+
+model Referral {
+  id                      String                @id
+  animalId                String
+  referringOrganisationId String
+  receivingOrganisationId String
+  createdById             String
+  status                  ReferralStatus        @default(DRAFT)
+  reason                  String
+  submittedAt             DateTime?
+  animal                  Animal                @relation(fields: [animalId], references: [id])
+  referringOrganisation   Organisation          @relation("ReferringOrganisation", fields: [referringOrganisationId], references: [id])
+  receivingOrganisation   Organisation          @relation("ReceivingOrganisation", fields: [receivingOrganisationId], references: [id])
+  createdBy               User                  @relation("ReferralCreator", fields: [createdById], references: [id])
+  statusEvents            ReferralStatusEvent[]
+  documents               ClinicalDocument[]
+  informationRequests     InformationRequest[]
+  dischargePlans          DischargePlan[]
+  followUpPlans           FollowUpPlan[]
+  consents                Consent[]
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+}
+
+model ReferralStatusEvent {
+  id          String          @id
+  referralId  String
+  fromStatus  ReferralStatus?
+  toStatus    ReferralStatus
+  changedById String
+  reason      String?
+  occurredAt  DateTime        @default(now())
+  referral    Referral        @relation(fields: [referralId], references: [id])
+  changedBy   User            @relation(fields: [changedById], references: [id])
+}
+
+model ClinicalDocument {
+  id                       String                  @id
+  referralId               String?
+  encounterId              String?
+  uploadedById             String
+  uploadedByOrganisationId String
+  filename                 String
+  mimeType                 String
+  storageKey               String
+  status                   DocumentStatus
+  referral                 Referral?               @relation(fields: [referralId], references: [id])
+  encounter                Encounter?              @relation(fields: [encounterId], references: [id])
+  uploadedBy               User                    @relation(fields: [uploadedById], references: [id])
+  uploadedByOrganisation   Organisation            @relation(fields: [uploadedByOrganisationId], references: [id])
+  processingJobs           DocumentProcessingJob[]
+  extractedFacts           ExtractedClinicalFact[]
+  createdAt                DateTime                @default(now())
+}
+
+model DocumentProcessingJob {
+  id           String           @id
+  documentId   String
+  attempt      Int              @default(1)
+  status       DocumentStatus
+  errorMessage String?
+  modelVersion String?
+  document     ClinicalDocument @relation(fields: [documentId], references: [id])
+  createdAt    DateTime         @default(now())
+  completedAt  DateTime?
+}
+
+model ExtractedClinicalFact {
+  id             String           @id
+  documentId     String
+  factType       String
+  candidateValue Json
+  confidence     Float
+  sourcePage     Int?
+  sourceSection  String?
+  modelVersion   String
+  document       ClinicalDocument @relation(fields: [documentId], references: [id])
+  review         ReviewDecision?
+  createdAt      DateTime         @default(now())
+}
+
+model ReviewDecision {
+  id              String                @id
+  extractedFactId String                @unique
+  reviewerId      String
+  outcome         ReviewOutcome
+  correctedValue  Json?
+  reviewedAt      DateTime              @default(now())
+  extractedFact   ExtractedClinicalFact @relation(fields: [extractedFactId], references: [id])
+  reviewer        User                  @relation(fields: [reviewerId], references: [id])
+}
+
+model InformationRequest {
+  id          String    @id
+  referralId  String
+  message     String
+  requestedAt DateTime  @default(now())
+  resolvedAt  DateTime?
+  referral    Referral  @relation(fields: [referralId], references: [id])
+}
+
+model DiagnosticResult {
+  id             String    @id
+  encounterId    String
+  name           String
+  value          String
+  unit           String?
+  referenceRange String?
+  observedAt     DateTime
+  encounter      Encounter @relation(fields: [encounterId], references: [id])
+}
+
+model MedicationRecord {
+  id                 String    @id
+  encounterId        String
+  name               String
+  instructions       String
+  startsAt           DateTime
+  endsAt             DateTime?
+  enteredByClinician Boolean   @default(true)
+  encounter          Encounter @relation(fields: [encounterId], references: [id])
+}
+
+model DischargePlan {
+  id                String    @id
+  referralId        String
+  encounterId       String
+  clinicalSummary   String
+  ownerInstructions String
+  approvedAt        DateTime?
+  approvedByName    String?
+  referral          Referral  @relation(fields: [referralId], references: [id])
+  encounter         Encounter @relation(fields: [encounterId], references: [id])
+}
+
+model FollowUpPlan {
+  id                  String               @id
+  referralId          String
+  contactInstructions String
+  startsAt            DateTime
+  endsAt              DateTime
+  referral            Referral             @relation(fields: [referralId], references: [id])
+  submissions         FollowUpSubmission[]
+}
+
+model FollowUpSubmission {
+  id              String          @id
+  followUpPlanId  String
+  ownerId         String
+  answers         Json
+  imageStorageKey String?
+  submittedAt     DateTime        @default(now())
+  followUpPlan    FollowUpPlan    @relation(fields: [followUpPlanId], references: [id])
+  owner           Owner           @relation(fields: [ownerId], references: [id])
+  alerts          FollowUpAlert[]
+}
+
+model FollowUpAlert {
+  id                   String             @id
+  followUpSubmissionId String
+  status               AlertStatus
+  triggerReasons       Json
+  acknowledgedAt       DateTime?
+  resolvedAt           DateTime?
+  followUpSubmission   FollowUpSubmission @relation(fields: [followUpSubmissionId], references: [id])
+}
+
+model Consent {
+  id         String    @id
+  ownerId    String
+  referralId String
+  scope      String
+  grantedAt  DateTime
+  revokedAt  DateTime?
+  owner      Owner     @relation(fields: [ownerId], references: [id])
+  referral   Referral  @relation(fields: [referralId], references: [id])
+}
+
+model AuditEvent {
+  id          String   @id
+  actorUserId String?
+  action      String
+  entityType  String
+  entityId    String
+  metadata    Json
+  occurredAt  DateTime @default(now())
+  actor       User?    @relation(fields: [actorUserId], references: [id])
+
+  @@index([entityType, entityId, occurredAt])
+}
+
+/// Durable snapshot for the portfolio demo workspace. The normalised clinical
+/// models above remain the production data contract; this snapshot lets the
+/// deterministic, resettable demo use the same transactional PostgreSQL
+/// persistence without duplicating the curated JSON import logic.
+model DemoWorkspaceState {
+  id        String   @id
+  payload   Json
+  revision  Int      @default(1)
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,23 @@
+{
+  "name": "vetbridge-au",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "typecheck": "turbo typecheck",
+    "format:check": "prettier --check .",
+    "db:generate": "pnpm --filter @vetbridge/database generate",
+    "db:seed": "pnpm --filter @vetbridge/database seed",
+    "data:generate": "node scripts/generate-synthetic-data.mjs",
+    "data:validate": "node scripts/validate-synthetic-data.mjs"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2",
+    "turbo": "2.5.8",
+    "typescript": "5.9.3"
+  }
+}

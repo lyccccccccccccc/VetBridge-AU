@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "scenario": {
+    "code": "FELINE_URINARY_OBSTRUCTION",
+    "title": "Luna — suspected urinary obstruction with missing attachment",
+    "purpose": "Information request, corrected AI extraction and resubmission workflow.",
+    "targetStatusPath": [
+      "DRAFT",
+      "READY_FOR_REVIEW",
+      "SUBMITTED",
+      "MORE_INFORMATION_REQUIRED",
+      "SUBMITTED",
+      "ACCEPTED"
+    ]
+  },
+  "owner": {
+    "id": "owner-b",
+    "displayName": "Synthetic Owner B",
+    "email": "owner-b@example.invalid",
+    "phone": "+61 400 000 102"
+  },
+  "animal": {
+    "id": "animal-luna",
+    "ownerId": "owner-b",
+    "name": "Luna",
+    "species": "CAT",
+    "breed": "Domestic Shorthair",
+    "sex": "Male",
+    "desexed": true,
+    "dateOfBirth": "2020-09-04",
+    "weightKg": 5.8,
+    "microchipNumber": "900000000000102",
+    "allergies": []
+  },
+  "encounters": [
+    {
+      "id": "encounter-b",
+      "animalId": "animal-luna",
+      "organisationId": "org-greville-general",
+      "occurredAt": "2026-07-30T07:35:00.000+10:00",
+      "summary": "Repeated unproductive litter-tray visits, vocalisation and a firm painful bladder.",
+      "observations": [
+        { "id": "obs-b-weight", "name": "Body weight", "value": 5.8, "unit": "kg" },
+        { "id": "obs-b-heart-rate", "name": "Heart rate", "value": 196, "unit": "beats/min" },
+        { "id": "obs-b-bladder", "name": "Bladder palpation", "value": "Firm, enlarged and painful" }
+      ],
+      "diagnosticResults": [
+        {
+          "id": "result-b-potassium",
+          "name": "Potassium",
+          "value": 4.7,
+          "unit": "mmol/L",
+          "referenceRange": "3.5–5.8",
+          "observedAt": "2026-07-30T07:54:00.000+10:00"
+        },
+        {
+          "id": "result-b-urinalysis",
+          "name": "Urinalysis",
+          "value": "Concentrated urine; blood detected; sediment review attached",
+          "unit": null,
+          "referenceRange": null,
+          "observedAt": "2026-07-30T07:57:00.000+10:00"
+        }
+      ],
+      "conditions": [
+        {
+          "id": "condition-b",
+          "code": "SUSPECTED_URETHRAL_OBSTRUCTION",
+          "display": "Suspected urethral obstruction",
+          "clinicalStatus": "provisional",
+          "recordedAt": "2026-07-30T08:00:00.000+10:00"
+        }
+      ],
+      "medicationRecords": []
+    }
+  ],
+  "referral": {
+    "id": "referral-b",
+    "displayId": "VB-2026-002",
+    "animalId": "animal-luna",
+    "encounterIds": ["encounter-b"],
+    "referringOrganisationId": "org-greville-general",
+    "receivingOrganisationId": "org-rivercity-specialist",
+    "createdById": "user-maya-chen",
+    "status": "MORE_INFORMATION_REQUIRED",
+    "reason": "Stranguria and repeated unproductive litter-tray visits; diagnostic attachment initially missing.",
+    "priority": "Attachment requested",
+    "submittedAt": "2026-07-30T08:22:00.000+10:00",
+    "lastUpdatedAt": "2026-07-30T10:04:00.000+10:00",
+    "statusEvents": [
+      {
+        "id": "status-b-1",
+        "fromStatus": null,
+        "toStatus": "DRAFT",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Referral created",
+        "occurredAt": "2026-07-30T08:05:00.000+10:00"
+      },
+      {
+        "id": "status-b-2",
+        "fromStatus": "DRAFT",
+        "toStatus": "READY_FOR_REVIEW",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Referral details reviewed",
+        "occurredAt": "2026-07-30T08:17:00.000+10:00"
+      },
+      {
+        "id": "status-b-3",
+        "fromStatus": "READY_FOR_REVIEW",
+        "toStatus": "SUBMITTED",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Submitted for specialist assessment",
+        "occurredAt": "2026-07-30T08:22:00.000+10:00"
+      },
+      {
+        "id": "status-b-4",
+        "fromStatus": "SUBMITTED",
+        "toStatus": "MORE_INFORMATION_REQUIRED",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Please attach the urinalysis and biochemistry report",
+        "occurredAt": "2026-07-30T10:04:00.000+10:00"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "document-b-lab",
+      "referralId": "referral-b",
+      "encounterId": "encounter-b",
+      "filename": "luna-diagnostic-results.pdf",
+      "mimeType": "application/pdf",
+      "storageKey": "synthetic/case-b/luna-diagnostic-results.pdf",
+      "status": "READY_FOR_REVIEW",
+      "uploadedById": "user-maya-chen",
+      "uploadedByName": "Dr Maya Chen",
+      "uploadedAt": "2026-07-30T10:18:00.000+10:00",
+      "clinicalText": "Synthetic diagnostic report: Potassium 4.7 mmol/L. Urinalysis shows concentrated urine and blood. The first automated pass read the potassium value as 4.1 and requires correction.",
+      "facts": [
+        {
+          "id": "fact-b-potassium",
+          "factType": "Laboratory result",
+          "candidateValue": "Potassium 4.1 mmol/L",
+          "confidence": 0.58,
+          "sourcePage": 1,
+          "sourceSection": "Biochemistry",
+          "modelVersion": "vetbridge-extractor-demo-1",
+          "review": {
+            "reviewerId": "user-oliver-smith",
+            "reviewerName": "Dr Oliver Smith",
+            "outcome": "CORRECTED",
+            "correctedValue": "Potassium 4.7 mmol/L",
+            "reviewedAt": "2026-07-30T10:25:00.000+10:00"
+          }
+        },
+        {
+          "id": "fact-b-urinalysis",
+          "factType": "Laboratory finding",
+          "candidateValue": "Concentrated urine; blood detected",
+          "confidence": 0.93,
+          "sourcePage": 1,
+          "sourceSection": "Urinalysis",
+          "modelVersion": "vetbridge-extractor-demo-1",
+          "review": null
+        }
+      ]
+    }
+  ],
+  "consents": [
+    {
+      "id": "consent-b",
+      "ownerId": "owner-b",
+      "referralId": "referral-b",
+      "scope": "REFERRAL_AND_FOLLOW_UP",
+      "grantedAt": "2026-07-30T08:10:00.000+10:00",
+      "revokedAt": null
+    }
+  ],
+  "informationRequests": [
+    {
+      "id": "info-request-b",
+      "referralId": "referral-b",
+      "message": "Please attach the urinalysis and biochemistry report before review.",
+      "requestedAt": "2026-07-30T10:04:00.000+10:00",
+      "resolvedAt": null
+    }
+  ],
+  "dischargePlans": [],
+  "followUpPlans": [],
+  "auditEvents": [
+    {
+      "id": "audit-b-created",
+      "actorUserId": "user-maya-chen",
+      "actorName": "Dr Maya Chen",
+      "action": "REFERRAL_CREATED",
+      "entityType": "Referral",
+      "entityId": "referral-b",
+      "metadata": { "synthetic": true },
+      "occurredAt": "2026-07-30T08:05:00.000+10:00"
+    },
+    {
+      "id": "audit-b-info-request",
+      "actorUserId": "user-oliver-smith",
+      "actorName": "Dr Oliver Smith",
+      "action": "INFORMATION_REQUESTED",
+      "entityType": "Referral",
+      "entityId": "referral-b",
+      "metadata": { "missing": "urinalysis and biochemistry report" },
+      "occurredAt": "2026-07-30T10:04:00.000+10:00"
+    },
+    {
+      "id": "audit-b-correction",
+      "actorUserId": "user-oliver-smith",
+      "actorName": "Dr Oliver Smith",
+      "action": "EXTRACTED_FACT_REVIEWED",
+      "entityType": "ExtractedClinicalFact",
+      "entityId": "fact-b-potassium",
+      "metadata": { "outcome": "CORRECTED", "correctedValue": "Potassium 4.7 mmol/L" },
+      "occurredAt": "2026-07-30T10:25:00.000+10:00"
+    }
+  ]
+}

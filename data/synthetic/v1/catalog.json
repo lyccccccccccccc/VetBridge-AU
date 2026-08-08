@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "vetbridge-curated-demo-v1",
+  "synthetic": true,
+  "seed": 2026,
+  "generatedAt": "2026-07-30T00:00:00.000Z",
+  "description": "Entirely fictional veterinary referral records for software development and demonstration. Not for clinical use.",
+  "organisations": [
+    {
+      "id": "org-greville-general",
+      "name": "Greville General Vet",
+      "type": "REFERRING_CLINIC"
+    },
+    {
+      "id": "org-rivercity-specialist",
+      "name": "River City Specialist Hospital",
+      "type": "RECEIVING_HOSPITAL"
+    },
+    {
+      "id": "org-northside-vet",
+      "name": "Northside Veterinary Clinic",
+      "type": "REFERRING_CLINIC"
+    }
+  ],
+  "identities": [
+    {
+      "id": "user-maya-chen",
+      "displayName": "Dr Maya Chen",
+      "email": "maya.chen@example.invalid",
+      "memberships": [
+        {
+          "organisationId": "org-greville-general",
+          "role": "REFERRING_VET"
+        }
+      ]
+    },
+    {
+      "id": "user-oliver-smith",
+      "displayName": "Dr Oliver Smith",
+      "email": "oliver.smith@example.invalid",
+      "memberships": [
+        {
+          "organisationId": "org-rivercity-specialist",
+          "role": "RECEIVING_CLINICIAN"
+        }
+      ]
+    },
+    {
+      "id": "user-nora-patel",
+      "displayName": "Dr Nora Patel",
+      "email": "nora.patel@example.invalid",
+      "memberships": [
+        {
+          "organisationId": "org-northside-vet",
+          "role": "REFERRING_VET"
+        }
+      ]
+    }
+  ],
+  "caseFiles": [
+    "cases/case-a.json",
+    "cases/case-b.json",
+    "cases/case-c.json"
+  ]
+}

@@ -1,0 +1,8 @@
+apps/document-service/.pytest_cache/
+.pytest_cache/
+apps/document-service/.ruff_cache/
+apps/document-service/.venv/
+node_modules/
+.next/
+dist/
+data/synthetic/v1/**/*.json

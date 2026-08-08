@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "scenario": {
+    "code": "CANINE_FOREIGN_BODY",
+    "title": "Buddy — suspected gastrointestinal foreign body",
+    "purpose": "Normal referral path with document extraction and receiving-clinician review.",
+    "targetStatusPath": [
+      "DRAFT",
+      "READY_FOR_REVIEW",
+      "SUBMITTED",
+      "ACCEPTED",
+      "ADMITTED",
+      "TREATMENT_IN_PROGRESS",
+      "DISCHARGED",
+      "FOLLOW_UP_ACTIVE",
+      "CLOSED"
+    ]
+  },
+  "owner": {
+    "id": "owner-a",
+    "displayName": "Synthetic Owner A",
+    "email": "owner-a@example.invalid",
+    "phone": "+61 400 000 101"
+  },
+  "animal": {
+    "id": "animal-buddy",
+    "ownerId": "owner-a",
+    "name": "Buddy",
+    "species": "DOG",
+    "breed": "Labrador Retriever",
+    "sex": "Male",
+    "desexed": true,
+    "dateOfBirth": "2021-03-12",
+    "weightKg": 31.4,
+    "microchipNumber": "900000000000101",
+    "allergies": []
+  },
+  "encounters": [
+    {
+      "id": "encounter-a",
+      "animalId": "animal-buddy",
+      "organisationId": "org-greville-general",
+      "occurredAt": "2026-07-30T08:30:00.000+10:00",
+      "summary": "Six vomiting episodes over 18 hours with reduced appetite after a toy fragment went missing.",
+      "observations": [
+        { "id": "obs-a-weight", "name": "Body weight", "value": 31.4, "unit": "kg" },
+        { "id": "obs-a-temperature", "name": "Temperature", "value": 39.1, "unit": "Cel" },
+        { "id": "obs-a-heart-rate", "name": "Heart rate", "value": 118, "unit": "beats/min" },
+        { "id": "obs-a-hydration", "name": "Hydration assessment", "value": "Mild dehydration" }
+      ],
+      "diagnosticResults": [
+        {
+          "id": "result-a-radiograph",
+          "name": "Abdominal radiographs",
+          "value": "Radiopaque object projected over the small intestine with mild proximal gas dilation",
+          "unit": null,
+          "referenceRange": null,
+          "observedAt": "2026-07-30T08:43:00.000+10:00"
+        },
+        {
+          "id": "result-a-pcv",
+          "name": "Packed cell volume",
+          "value": 48,
+          "unit": "%",
+          "referenceRange": "37–55",
+          "observedAt": "2026-07-30T08:39:00.000+10:00"
+        }
+      ],
+      "conditions": [
+        {
+          "id": "condition-a",
+          "code": "SUSPECTED_GI_FOREIGN_BODY",
+          "display": "Suspected gastrointestinal foreign body",
+          "clinicalStatus": "provisional",
+          "recordedAt": "2026-07-30T08:47:00.000+10:00"
+        }
+      ],
+      "medicationRecords": [
+        {
+          "id": "med-a-maropitant",
+          "name": "Maropitant",
+          "instructions": "Dose and route recorded in source clinical note; requires clinician verification.",
+          "startsAt": "2026-07-30T08:50:00.000+10:00",
+          "endsAt": null,
+          "enteredByClinician": true
+        }
+      ]
+    }
+  ],
+  "referral": {
+    "id": "referral-a",
+    "displayId": "VB-2026-001",
+    "animalId": "animal-buddy",
+    "encounterIds": ["encounter-a"],
+    "referringOrganisationId": "org-greville-general",
+    "receivingOrganisationId": "org-rivercity-specialist",
+    "createdById": "user-maya-chen",
+    "status": "SUBMITTED",
+    "reason": "Persistent vomiting and reduced appetite; suspected gastrointestinal foreign body.",
+    "priority": "Specialist review requested",
+    "submittedAt": "2026-07-30T09:12:00.000+10:00",
+    "lastUpdatedAt": "2026-07-30T09:12:00.000+10:00",
+    "statusEvents": [
+      {
+        "id": "status-a-1",
+        "fromStatus": null,
+        "toStatus": "DRAFT",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Referral created",
+        "occurredAt": "2026-07-30T08:45:00.000+10:00"
+      },
+      {
+        "id": "status-a-2",
+        "fromStatus": "DRAFT",
+        "toStatus": "READY_FOR_REVIEW",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Clinical details and owner consent checked",
+        "occurredAt": "2026-07-30T09:05:00.000+10:00"
+      },
+      {
+        "id": "status-a-3",
+        "fromStatus": "READY_FOR_REVIEW",
+        "toStatus": "SUBMITTED",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Submitted to River City Specialist Hospital",
+        "occurredAt": "2026-07-30T09:12:00.000+10:00"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "document-a-history",
+      "referralId": "referral-a",
+      "encounterId": "encounter-a",
+      "filename": "buddy-clinical-history.pdf",
+      "mimeType": "application/pdf",
+      "storageKey": "synthetic/case-a/buddy-clinical-history.pdf",
+      "status": "READY_FOR_REVIEW",
+      "uploadedById": "user-maya-chen",
+      "uploadedByName": "Dr Maya Chen",
+      "uploadedAt": "2026-07-30T08:57:00.000+10:00",
+      "clinicalText": "Synthetic note: Buddy presented after six vomiting episodes over 18 hours. Appetite reduced. A rubber toy fragment is missing. Abdominal radiographs show a radiopaque object projected over the small intestine. Maropitant was recorded by the referring veterinarian. Referral requested for further assessment.",
+      "facts": [
+        {
+          "id": "fact-a-symptom",
+          "factType": "Presenting symptom",
+          "candidateValue": "Vomiting 6 times over 18 hours",
+          "confidence": 0.97,
+          "sourcePage": 1,
+          "sourceSection": "Presenting complaint",
+          "modelVersion": "vetbridge-extractor-demo-1",
+          "review": null
+        },
+        {
+          "id": "fact-a-imaging",
+          "factType": "Imaging finding",
+          "candidateValue": "Radiopaque object projected over the small intestine",
+          "confidence": 0.88,
+          "sourcePage": 2,
+          "sourceSection": "Abdominal radiographs",
+          "modelVersion": "vetbridge-extractor-demo-1",
+          "review": null
+        },
+        {
+          "id": "fact-a-medication",
+          "factType": "Medication administered",
+          "candidateValue": "Maropitant recorded by referring veterinarian",
+          "confidence": 0.91,
+          "sourcePage": 2,
+          "sourceSection": "Treatment",
+          "modelVersion": "vetbridge-extractor-demo-1",
+          "review": null
+        }
+      ]
+    }
+  ],
+  "consents": [
+    {
+      "id": "consent-a",
+      "ownerId": "owner-a",
+      "referralId": "referral-a",
+      "scope": "REFERRAL_AND_FOLLOW_UP",
+      "grantedAt": "2026-07-30T08:52:00.000+10:00",
+      "revokedAt": null
+    }
+  ],
+  "informationRequests": [],
+  "dischargePlans": [],
+  "followUpPlans": [],
+  "auditEvents": [
+    {
+      "id": "audit-a-created",
+      "actorUserId": "user-maya-chen",
+      "actorName": "Dr Maya Chen",
+      "action": "REFERRAL_CREATED",
+      "entityType": "Referral",
+      "entityId": "referral-a",
+      "metadata": { "synthetic": true },
+      "occurredAt": "2026-07-30T08:45:00.000+10:00"
+    },
+    {
+      "id": "audit-a-submitted",
+      "actorUserId": "user-maya-chen",
+      "actorName": "Dr Maya Chen",
+      "action": "REFERRAL_STATUS_CHANGED",
+      "entityType": "Referral",
+      "entityId": "referral-a",
+      "metadata": { "from": "READY_FOR_REVIEW", "to": "SUBMITTED" },
+      "occurredAt": "2026-07-30T09:12:00.000+10:00"
+    }
+  ]
+}

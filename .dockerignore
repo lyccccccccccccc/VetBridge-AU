@@ -1,0 +1,14 @@
+.git
+.env
+node_modules
+**/node_modules
+.next
+**/.next
+.turbo
+**/.turbo
+dist
+**/dist
+.venv
+**/__pycache__
+data/uploads
+*.tar.gz

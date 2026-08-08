@@ -1,0 +1,46 @@
+databases:
+  - name: vetbridge-postgres
+    databaseName: vetbridge
+    user: vetbridge
+    plan: free
+
+services:
+  - type: web
+    name: vetbridge-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.api
+    healthCheckPath: /health
+    plan: free
+    preDeployCommand: pnpm --filter @vetbridge/database exec prisma db push --skip-generate
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vetbridge-postgres
+          property: connectionString
+      - key: VETBRIDGE_STORE
+        value: postgresql
+      - key: WEB_ORIGIN
+        value: https://vetbridge-au.onrender.com
+      - key: VETBRIDGE_STORAGE
+        value: s3
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        value: auto
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+
+  - type: web
+    name: vetbridge-au
+    runtime: docker
+    dockerfilePath: ./Dockerfile.web
+    plan: free
+    healthCheckPath: /
+    dockerContext: .
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://vetbridge-api.onrender.com

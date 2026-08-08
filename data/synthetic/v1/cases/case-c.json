@@ -1,0 +1,336 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "scenario": {
+    "code": "CANINE_FRACTURE_FOLLOW_UP",
+    "title": "Max — post-operative fracture follow-up alert",
+    "purpose": "Completed specialist handover followed by an owner response that requires human review.",
+    "targetStatusPath": [
+      "DRAFT",
+      "READY_FOR_REVIEW",
+      "SUBMITTED",
+      "ACCEPTED",
+      "APPOINTMENT_BOOKED",
+      "ADMITTED",
+      "TREATMENT_IN_PROGRESS",
+      "DISCHARGED",
+      "FOLLOW_UP_ACTIVE",
+      "CLOSED"
+    ]
+  },
+  "owner": {
+    "id": "owner-c",
+    "displayName": "Synthetic Owner C",
+    "email": "owner-c@example.invalid",
+    "phone": "+61 400 000 103"
+  },
+  "animal": {
+    "id": "animal-max",
+    "ownerId": "owner-c",
+    "name": "Max",
+    "species": "DOG",
+    "breed": "Border Collie",
+    "sex": "Male",
+    "desexed": true,
+    "dateOfBirth": "2019-11-18",
+    "weightKg": 21.6,
+    "microchipNumber": "900000000000103",
+    "allergies": []
+  },
+  "encounters": [
+    {
+      "id": "encounter-c-referring",
+      "animalId": "animal-max",
+      "organisationId": "org-greville-general",
+      "occurredAt": "2026-07-23T09:20:00.000+10:00",
+      "summary": "Non-weight-bearing right hindlimb lameness after a fall; radiographs show a tibial fracture.",
+      "observations": [
+        { "id": "obs-c-weight", "name": "Body weight", "value": 21.6, "unit": "kg" },
+        { "id": "obs-c-lameness", "name": "Lameness", "value": "Non-weight-bearing right hindlimb" }
+      ],
+      "diagnosticResults": [
+        {
+          "id": "result-c-radiograph",
+          "name": "Right tibial radiographs",
+          "value": "Displaced tibial fracture",
+          "unit": null,
+          "referenceRange": null,
+          "observedAt": "2026-07-23T09:42:00.000+10:00"
+        }
+      ],
+      "conditions": [
+        {
+          "id": "condition-c-fracture",
+          "code": "RIGHT_TIBIAL_FRACTURE",
+          "display": "Right tibial fracture",
+          "clinicalStatus": "confirmed",
+          "recordedAt": "2026-07-23T09:48:00.000+10:00"
+        }
+      ],
+      "medicationRecords": []
+    },
+    {
+      "id": "encounter-c-specialist",
+      "animalId": "animal-max",
+      "organisationId": "org-rivercity-specialist",
+      "occurredAt": "2026-07-24T08:15:00.000+10:00",
+      "summary": "Synthetic specialist admission and operative fracture management, followed by discharge planning.",
+      "observations": [
+        { "id": "obs-c-postop", "name": "Post-operative recovery", "value": "Stable at discharge" }
+      ],
+      "diagnosticResults": [
+        {
+          "id": "result-c-postop-image",
+          "name": "Post-operative imaging",
+          "value": "Implant position documented as satisfactory in synthetic report",
+          "unit": null,
+          "referenceRange": null,
+          "observedAt": "2026-07-24T15:30:00.000+10:00"
+        }
+      ],
+      "conditions": [
+        {
+          "id": "condition-c-postop",
+          "code": "POSTOPERATIVE_FRACTURE_CARE",
+          "display": "Post-operative fracture care",
+          "clinicalStatus": "active",
+          "recordedAt": "2026-07-24T16:00:00.000+10:00"
+        }
+      ],
+      "medicationRecords": [
+        {
+          "id": "med-c-discharge",
+          "name": "Clinic-entered discharge medication",
+          "instructions": "Follow the approved discharge label; no AI-generated dose.",
+          "startsAt": "2026-07-24T17:00:00.000+10:00",
+          "endsAt": "2026-08-03T17:00:00.000+10:00",
+          "enteredByClinician": true
+        }
+      ]
+    }
+  ],
+  "referral": {
+    "id": "referral-c",
+    "displayId": "VB-2026-003",
+    "animalId": "animal-max",
+    "encounterIds": ["encounter-c-referring", "encounter-c-specialist"],
+    "referringOrganisationId": "org-greville-general",
+    "receivingOrganisationId": "org-rivercity-specialist",
+    "createdById": "user-maya-chen",
+    "status": "FOLLOW_UP_ACTIVE",
+    "reason": "Post-operative handover after specialist treatment of a right tibial fracture.",
+    "priority": "Follow-up alert requires review",
+    "submittedAt": "2026-07-23T10:15:00.000+10:00",
+    "lastUpdatedAt": "2026-07-30T07:35:00.000+10:00",
+    "statusEvents": [
+      {
+        "id": "status-c-1",
+        "fromStatus": null,
+        "toStatus": "DRAFT",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Referral created",
+        "occurredAt": "2026-07-23T09:55:00.000+10:00"
+      },
+      {
+        "id": "status-c-2",
+        "fromStatus": "DRAFT",
+        "toStatus": "READY_FOR_REVIEW",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Referral reviewed",
+        "occurredAt": "2026-07-23T10:08:00.000+10:00"
+      },
+      {
+        "id": "status-c-3",
+        "fromStatus": "READY_FOR_REVIEW",
+        "toStatus": "SUBMITTED",
+        "changedById": "user-maya-chen",
+        "changedByName": "Dr Maya Chen",
+        "reason": "Submitted",
+        "occurredAt": "2026-07-23T10:15:00.000+10:00"
+      },
+      {
+        "id": "status-c-4",
+        "fromStatus": "SUBMITTED",
+        "toStatus": "ACCEPTED",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Accepted for specialist care",
+        "occurredAt": "2026-07-23T10:45:00.000+10:00"
+      },
+      {
+        "id": "status-c-5",
+        "fromStatus": "ACCEPTED",
+        "toStatus": "APPOINTMENT_BOOKED",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Appointment booked",
+        "occurredAt": "2026-07-23T11:00:00.000+10:00"
+      },
+      {
+        "id": "status-c-6",
+        "fromStatus": "APPOINTMENT_BOOKED",
+        "toStatus": "ADMITTED",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Patient admitted",
+        "occurredAt": "2026-07-24T08:15:00.000+10:00"
+      },
+      {
+        "id": "status-c-7",
+        "fromStatus": "ADMITTED",
+        "toStatus": "TREATMENT_IN_PROGRESS",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Treatment commenced",
+        "occurredAt": "2026-07-24T10:00:00.000+10:00"
+      },
+      {
+        "id": "status-c-8",
+        "fromStatus": "TREATMENT_IN_PROGRESS",
+        "toStatus": "DISCHARGED",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Discharge plan approved",
+        "occurredAt": "2026-07-24T17:00:00.000+10:00"
+      },
+      {
+        "id": "status-c-9",
+        "fromStatus": "DISCHARGED",
+        "toStatus": "FOLLOW_UP_ACTIVE",
+        "changedById": "user-oliver-smith",
+        "changedByName": "Dr Oliver Smith",
+        "reason": "Owner follow-up activated",
+        "occurredAt": "2026-07-24T17:05:00.000+10:00"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "document-c-discharge",
+      "referralId": "referral-c",
+      "encounterId": "encounter-c-specialist",
+      "filename": "max-discharge-plan.pdf",
+      "mimeType": "application/pdf",
+      "storageKey": "synthetic/case-c/max-discharge-plan.pdf",
+      "status": "APPROVED",
+      "uploadedById": "user-oliver-smith",
+      "uploadedByName": "Dr Oliver Smith",
+      "uploadedAt": "2026-07-24T16:45:00.000+10:00",
+      "clinicalText": "Synthetic discharge plan: activity restriction and wound observations were entered and approved by the specialist clinician. Contact the hospital using the supplied instructions if concerns arise.",
+      "facts": [
+        {
+          "id": "fact-c-activity",
+          "factType": "Discharge instruction",
+          "candidateValue": "Activity restriction documented by specialist clinician",
+          "confidence": 0.96,
+          "sourcePage": 1,
+          "sourceSection": "Home care",
+          "modelVersion": "vetbridge-extractor-demo-1",
+          "review": {
+            "reviewerId": "user-oliver-smith",
+            "reviewerName": "Dr Oliver Smith",
+            "outcome": "APPROVED",
+            "correctedValue": null,
+            "reviewedAt": "2026-07-24T16:55:00.000+10:00"
+          }
+        }
+      ]
+    }
+  ],
+  "consents": [
+    {
+      "id": "consent-c",
+      "ownerId": "owner-c",
+      "referralId": "referral-c",
+      "scope": "REFERRAL_AND_FOLLOW_UP",
+      "grantedAt": "2026-07-23T10:00:00.000+10:00",
+      "revokedAt": null
+    }
+  ],
+  "informationRequests": [],
+  "dischargePlans": [
+    {
+      "id": "discharge-c",
+      "referralId": "referral-c",
+      "encounterId": "encounter-c-specialist",
+      "clinicalSummary": "Synthetic post-operative fracture care handover.",
+      "ownerInstructions": "Follow clinician-approved activity, wound observation and contact instructions.",
+      "approvedAt": "2026-07-24T16:55:00.000+10:00",
+      "approvedByName": "Dr Oliver Smith"
+    }
+  ],
+  "followUpPlans": [
+    {
+      "id": "follow-up-c",
+      "referralId": "referral-c",
+      "contactInstructions": "Contact River City Specialist Hospital using the approved discharge instructions.",
+      "startsAt": "2026-07-24T17:05:00.000+10:00",
+      "endsAt": "2026-08-14T17:05:00.000+10:00",
+      "submissions": [
+        {
+          "id": "submission-c-1",
+          "ownerId": "owner-c",
+          "answers": {
+            "mobility": "Less willing to bear weight today",
+            "wound": "New redness visible",
+            "appetite": "Eating normally"
+          },
+          "imageStorageKey": "synthetic/case-c/max-follow-up-day-6.jpg",
+          "submittedAt": "2026-07-30T07:30:00.000+10:00",
+          "alerts": [
+            {
+              "id": "alert-c-1",
+              "status": "REVIEW_REQUIRED",
+              "triggerReasons": [
+                "Owner reported reduced weight bearing",
+                "Owner reported new wound redness"
+              ],
+              "createdAt": "2026-07-30T07:35:00.000+10:00",
+              "acknowledgedAt": null,
+              "resolvedAt": null,
+              "clinicalDisclaimer": "Rule-based routing only; this is not a diagnosis or urgency determination."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auditEvents": [
+    {
+      "id": "audit-c-created",
+      "actorUserId": "user-maya-chen",
+      "actorName": "Dr Maya Chen",
+      "action": "REFERRAL_CREATED",
+      "entityType": "Referral",
+      "entityId": "referral-c",
+      "metadata": { "synthetic": true },
+      "occurredAt": "2026-07-23T09:55:00.000+10:00"
+    },
+    {
+      "id": "audit-c-discharge",
+      "actorUserId": "user-oliver-smith",
+      "actorName": "Dr Oliver Smith",
+      "action": "DISCHARGE_PLAN_APPROVED",
+      "entityType": "DischargePlan",
+      "entityId": "discharge-c",
+      "metadata": { "synthetic": true },
+      "occurredAt": "2026-07-24T16:55:00.000+10:00"
+    },
+    {
+      "id": "audit-c-alert",
+      "actorUserId": null,
+      "actorName": "VetBridge rules engine",
+      "action": "FOLLOW_UP_REVIEW_REQUESTED",
+      "entityType": "FollowUpAlert",
+      "entityId": "alert-c-1",
+      "metadata": {
+        "ruleBased": true,
+        "notDiagnosis": true,
+        "triggerCount": 2
+      },
+      "occurredAt": "2026-07-30T07:35:00.000+10:00"
+    }
+  ]
+}

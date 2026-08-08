@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vetbridge.example.invalid/schema/synthetic-case-v1.json",
+  "title": "VetBridge synthetic longitudinal veterinary case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "synthetic",
+    "scenario",
+    "owner",
+    "animal",
+    "encounters",
+    "referral",
+    "documents",
+    "consents",
+    "informationRequests",
+    "dischargePlans",
+    "followUpPlans",
+    "auditEvents"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "synthetic": { "const": true },
+    "scenario": {
+      "type": "object",
+      "required": ["code", "title", "purpose", "targetStatusPath"],
+      "properties": {
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "purpose": { "type": "string" },
+        "targetStatusPath": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/referralStatus" }
+        }
+      }
+    },
+    "owner": { "$ref": "#/$defs/owner" },
+    "animal": { "$ref": "#/$defs/animal" },
+    "encounters": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/encounter" }
+    },
+    "referral": { "$ref": "#/$defs/referral" },
+    "documents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/document" }
+    },
+    "consents": { "type": "array", "items": { "type": "object" } },
+    "informationRequests": { "type": "array", "items": { "type": "object" } },
+    "dischargePlans": { "type": "array", "items": { "type": "object" } },
+    "followUpPlans": { "type": "array", "items": { "type": "object" } },
+    "auditEvents": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/auditEvent" }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 3, "pattern": "^[a-z0-9-]+$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "referralStatus": {
+      "enum": [
+        "DRAFT",
+        "READY_FOR_REVIEW",
+        "SUBMITTED",
+        "MORE_INFORMATION_REQUIRED",
+        "ACCEPTED",
+        "APPOINTMENT_BOOKED",
+        "ADMITTED",
+        "TREATMENT_IN_PROGRESS",
+        "DISCHARGED",
+        "FOLLOW_UP_ACTIVE",
+        "CLOSED",
+        "DECLINED",
+        "CANCELLED"
+      ]
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "displayName", "email", "phone"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string", "pattern": "\\.invalid$" },
+        "phone": { "type": "string", "pattern": "^\\+61 400 000 [0-9]{3}$" }
+      }
+    },
+    "animal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ownerId",
+        "name",
+        "species",
+        "breed",
+        "sex",
+        "desexed",
+        "dateOfBirth",
+        "weightKg",
+        "microchipNumber",
+        "allergies"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "ownerId": { "$ref": "#/$defs/id" },
+        "name": { "type": "string" },
+        "species": { "enum": ["DOG", "CAT"] },
+        "breed": { "type": "string" },
+        "sex": { "enum": ["Male", "Female"] },
+        "desexed": { "type": "boolean" },
+        "dateOfBirth": { "type": "string", "format": "date" },
+        "weightKg": { "type": "number", "exclusiveMinimum": 0 },
+        "microchipNumber": { "type": "string", "pattern": "^900000000[0-9]{6}$" },
+        "allergies": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "encounter": {
+      "type": "object",
+      "required": [
+        "id",
+        "animalId",
+        "organisationId",
+        "occurredAt",
+        "summary",
+        "observations",
+        "diagnosticResults",
+        "conditions",
+        "medicationRecords"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "animalId": { "$ref": "#/$defs/id" },
+        "organisationId": { "$ref": "#/$defs/id" },
+        "occurredAt": { "$ref": "#/$defs/timestamp" },
+        "summary": { "type": "string" },
+        "observations": { "type": "array", "items": { "type": "object" } },
+        "diagnosticResults": { "type": "array", "items": { "type": "object" } },
+        "conditions": { "type": "array", "items": { "type": "object" } },
+        "medicationRecords": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "referral": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "displayId",
+        "animalId",
+        "encounterIds",
+        "referringOrganisationId",
+        "receivingOrganisationId",
+        "createdById",
+        "status",
+        "reason",
+        "priority",
+        "submittedAt",
+        "lastUpdatedAt",
+        "statusEvents"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "displayId": { "type": "string", "pattern": "^VB-[0-9]{4}-[0-9]{3,}$" },
+        "animalId": { "$ref": "#/$defs/id" },
+        "encounterIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "referringOrganisationId": { "$ref": "#/$defs/id" },
+        "receivingOrganisationId": { "$ref": "#/$defs/id" },
+        "createdById": { "$ref": "#/$defs/id" },
+        "status": { "$ref": "#/$defs/referralStatus" },
+        "reason": { "type": "string" },
+        "priority": { "type": "string" },
+        "submittedAt": {
+          "oneOf": [{ "$ref": "#/$defs/timestamp" }, { "type": "null" }]
+        },
+        "lastUpdatedAt": { "$ref": "#/$defs/timestamp" },
+        "statusEvents": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/statusEvent" }
+        }
+      }
+    },
+    "statusEvent": {
+      "type": "object",
+      "required": [
+        "id",
+        "fromStatus",
+        "toStatus",
+        "changedById",
+        "changedByName",
+        "reason",
+        "occurredAt"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "fromStatus": {
+          "oneOf": [{ "$ref": "#/$defs/referralStatus" }, { "type": "null" }]
+        },
+        "toStatus": { "$ref": "#/$defs/referralStatus" },
+        "changedById": { "$ref": "#/$defs/id" },
+        "changedByName": { "type": "string" },
+        "reason": { "type": ["string", "null"] },
+        "occurredAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "document": {
+      "type": "object",
+      "required": [
+        "id",
+        "referralId",
+        "encounterId",
+        "filename",
+        "mimeType",
+        "storageKey",
+        "status",
+        "uploadedById",
+        "uploadedByName",
+        "uploadedAt",
+        "clinicalText",
+        "facts"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "referralId": { "$ref": "#/$defs/id" },
+        "encounterId": { "$ref": "#/$defs/id" },
+        "filename": { "type": "string" },
+        "mimeType": { "type": "string" },
+        "storageKey": { "type": "string" },
+        "status": { "enum": ["READY_FOR_REVIEW", "APPROVED"] },
+        "uploadedById": { "$ref": "#/$defs/id" },
+        "uploadedByName": { "type": "string" },
+        "uploadedAt": { "$ref": "#/$defs/timestamp" },
+        "clinicalText": { "type": "string" },
+        "facts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fact" }
+        }
+      }
+    },
+    "fact": {
+      "type": "object",
+      "required": [
+        "id",
+        "factType",
+        "candidateValue",
+        "confidence",
+        "sourcePage",
+        "sourceSection",
+        "modelVersion",
+        "review"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "factType": { "type": "string" },
+        "candidateValue": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sourcePage": { "type": "integer", "minimum": 1 },
+        "sourceSection": { "type": "string" },
+        "modelVersion": { "type": "string" },
+        "review": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": [
+                "reviewerId",
+                "reviewerName",
+                "outcome",
+                "correctedValue",
+                "reviewedAt"
+              ],
+              "properties": {
+                "reviewerId": { "$ref": "#/$defs/id" },
+                "reviewerName": { "type": "string" },
+                "outcome": { "enum": ["APPROVED", "CORRECTED", "REJECTED"] },
+                "correctedValue": { "type": ["string", "null"] },
+                "reviewedAt": { "$ref": "#/$defs/timestamp" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "auditEvent": {
+      "type": "object",
+      "required": [
+        "id",
+        "actorUserId",
+        "actorName",
+        "action",
+        "entityType",
+        "entityId",
+        "metadata",
+        "occurredAt"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "actorUserId": { "type": ["string", "null"] },
+        "actorName": { "type": "string" },
+        "action": { "type": "string" },
+        "entityType": { "type": "string" },
+        "entityId": { "$ref": "#/$defs/id" },
+        "metadata": { "type": "object" },
+        "occurredAt": { "$ref": "#/$defs/timestamp" }
+      }
+    }
+  }
+}
