@@ -1,11 +1,52 @@
 # VetBridge AU
 
-VetBridge AU is a portfolio MVP for safe veterinary referral, discharge handover,
-and owner follow-up workflows. It connects a referring clinic, a receiving
-specialist or emergency hospital, and a pet owner without attempting diagnosis,
-triage, prescribing, or replacement of a practice management system.
+A production-oriented veterinary referral and care-handover platform designed to help referring clinics, receiving specialist or emergency hospitals, and pet owners coordinate information more clearly across a referral journey.
 
 **Live demo:** [vetbridge.edwardliu.dev](https://vetbridge.edwardliu.dev)
+
+## Problem
+
+Veterinary referrals often involve information moving between multiple parties: the referring clinic, the receiving specialist or emergency hospital, and the pet owner. Missing information, unclear handovers, or poor visibility across the referral lifecycle can make coordination slower and harder to manage.
+
+## Solution
+
+I built VetBridge AU as a workflow-focused platform for referral coordination, discharge handover, document review, and owner follow-up.
+
+The system keeps referrals visible only to the appropriate organisations and roles, tracks status changes and audit events, supports document upload and asynchronous processing, and allows AI-extracted clinical facts to remain pending until a clinician reviews or corrects them.
+
+VetBridge AU is intentionally not a diagnostic or prescribing system and does not replace a practice management system.
+
+## Why This Project Matters
+
+This project goes beyond a simple CRUD application. It required modelling multi-organisation access rules, referral state transitions, document-processing workflows, auditability, synthetic clinical data, and human review of AI-assisted extraction.
+
+It gave me practical experience building software where workflow correctness, data visibility, role-based access, and reliable handover between different users are central to the product.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Clinic["Referring Clinic"] --> Web["Next.js Web App"]
+    Hospital["Receiving Hospital"] --> Web
+    Owner["Pet Owner"] --> Web
+
+    Web --> API["NestJS Workflow API"]
+    API --> Domain["Referral State Machine"]
+    API --> DB["PostgreSQL / Prisma"]
+    API --> Docs["FastAPI Document Service"]
+    Docs --> Review["AI-Extracted Facts\nPending Clinician Review"]
+```
+
+## Engineering Highlights
+
+- Role-aware access across referring, receiving, and unrelated organisations.
+- Enforced referral state transitions through a shared domain state machine.
+- Audit history written alongside referral status changes.
+- PDF, JPEG, and PNG uploads with asynchronous document-processing workflows.
+- AI-extracted clinical facts remain pending until reviewed or corrected by a clinician.
+- Transactional PostgreSQL persistence with an in-memory fallback for zero-setup demos.
+- Deterministic synthetic veterinary datasets for safe development and demonstration.
+- Production deployment configuration using Docker and managed PostgreSQL.
 
 ## Workspace
 
@@ -18,7 +59,7 @@ triage, prescribing, or replacement of a practice management system.
 - `scripts`: deterministic generation and cross-record validation
 - `docs`: product and implementation specifications
 
-## Current demo
+## Current Demo
 
 Phase 7 includes an interactive clinical referral workspace backed by canonical
 JSON and an optional transactional PostgreSQL state store:
@@ -29,13 +70,13 @@ JSON and an optional transactional PostgreSQL state store:
 - write status history and audit events together;
 - review or correct AI-extracted clinical facts;
 - prove cross-organisation access is rejected;
-- reset the deterministic synthetic demo.
+- reset the deterministic synthetic demo;
 - inspect three detailed longitudinal case files;
-- generate and validate a 100-animal dataset with seed `2026`.
+- generate and validate a 100-animal dataset with seed `2026`;
 - inspect typed encounters, observations, diagnostics and medication records;
 - manage missing-information handover as the referring clinic;
 - review owner follow-up answers and acknowledge or resolve alerts as the
-  receiving clinician.
+  receiving clinician;
 - upload PDF, JPEG, or PNG clinical records with a 5 MB limit;
 - queue uploaded documents for asynchronous processing;
 - keep every extracted fact pending until a receiving clinician approves or
@@ -45,12 +86,11 @@ JSON and an optional transactional PostgreSQL state store:
 
 See
 [`docs/phase-7-deployment-readiness.md`](docs/phase-7-deployment-readiness.md)
-for
-the current workflow and verification record. The canonical data contract is
+for the current workflow and verification record. The canonical data contract is
 documented in
 [`docs/phase-4-synthetic-data-foundation.md`](docs/phase-4-synthetic-data-foundation.md).
 
-## Synthetic data
+## Synthetic Data
 
 ```bash
 pnpm data:validate
@@ -62,7 +102,7 @@ The generator creates deterministic fictional data for development and
 demonstration. It is not clinical guidance, a diagnostic dataset, or real-world
 patient data.
 
-## Local setup
+## Local Setup
 
 Prerequisites: Node.js 22+, pnpm 10+, Python 3.12+, Docker.
 
@@ -89,7 +129,7 @@ when started in its Python environment.
 All included names, clinics, owners, animals, records, and documents are
 synthetic.
 
-## Production deployment
+## Production Deployment
 
 `render.yaml`, `Dockerfile.api`, and `Dockerfile.web` define a reproducible
 public deployment with managed PostgreSQL. Production document uploads require
